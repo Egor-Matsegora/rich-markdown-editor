@@ -11,6 +11,8 @@ type BlockMenuProps = Omit<
   Required<Pick<Props, "onLinkToolbarOpen" | "embeds">>;
 
 class BlockMenu extends React.Component<BlockMenuProps> {
+  // componentDidMount() {}
+
   get items() {
     return getMenuItems(this.props.dictionary);
   }

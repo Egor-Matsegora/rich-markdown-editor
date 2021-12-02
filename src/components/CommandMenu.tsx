@@ -31,6 +31,9 @@ export type Props<T extends MenuItem = MenuItem> = {
   uploadImage?: (file: File) => Promise<string>;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  uploadFile?: (file: File) => Promise<string>;
+  onFileUploadStart?: () => void;
+  onFileUploadStop?: () => void;
   onShowToast?: (message: string, id: string) => void;
   onLinkToolbarOpen?: () => void;
   onClose: () => void;
@@ -61,6 +64,7 @@ type State = {
 class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
   menuRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
+  inputFileRef = React.createRef<HTMLInputElement>();
 
   state: State = {
     left: -1000,
@@ -290,6 +294,38 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     this.props.onClose();
   };
 
+  handleFilePicked = event => {
+    const files = getDataTransferFiles(event);
+
+    const {
+      view,
+      uploadFile,
+      onFileUploadStart,
+      onFileUploadStop,
+      onShowToast,
+    } = this.props;
+    const { state } = view;
+    const parent = findParentNode(node => !!node)(state.selection);
+
+    this.clearSearch();
+
+    if (parent) {
+      insertFiles(view, event, parent.pos, files, {
+        uploadFile,
+        onFileUploadStart,
+        onFileUploadStop,
+        onShowToast,
+        dictionary: this.props.dictionary,
+      });
+    }
+
+    if (this.inputFileRef.current) {
+      this.inputFileRef.current.value = "";
+    }
+
+    this.props.onClose();
+  };
+
   clearSearch = () => {
     this.props.onClearSearch();
   };
@@ -396,6 +432,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       embeds = [],
       search = "",
       uploadImage,
+      uploadFile,
       commands,
       filterable = true,
     } = this.props;
@@ -433,6 +470,10 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
 
+      if (!uploadFile && item.name === "file") {
+        return true;
+      }
+
       // some items (defaultHidden) are not visible until a search query exists
       if (!search) return !item.defaultHidden;
 
@@ -450,7 +491,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
   }
 
   render() {
-    const { dictionary, isActive, uploadImage } = this.props;
+    const { dictionary, isActive, uploadImage, uploadFile } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -515,6 +556,15 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
                 ref={this.inputRef}
                 onChange={this.handleImagePicked}
                 accept="image/*"
+              />
+            </VisuallyHidden>
+          )}
+          {uploadFile && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.inputFileRef}
+                onChange={this.handleFilePicked}
               />
             </VisuallyHidden>
           )}

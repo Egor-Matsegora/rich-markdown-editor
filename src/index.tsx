@@ -135,6 +135,7 @@ export type Props = {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
   uploadImage?: (file: File) => Promise<string>;
+  uploadFile?: (file: File) => Promise<string>;
   onBlur?: () => void;
   onFocus?: () => void;
   onSave?: ({ done: boolean }) => void;
@@ -142,6 +143,8 @@ export type Props = {
   onChange?: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  onFileUploadStart?: () => void;
+  onFileUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string, event: MouseEvent) => void;

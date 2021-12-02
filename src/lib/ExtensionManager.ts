@@ -159,6 +159,8 @@ export default class ExtensionManager {
   }
 
   commands({ schema, view }) {
+    console.log(this.extensions[16].commands);
+
     return this.extensions
       .filter(extension => extension.commands)
       .reduce((allCommands, extension) => {
