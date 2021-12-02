@@ -10,6 +10,7 @@ import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import filterExcessSeparators from "../lib/filterExcessSeparators";
 import insertFiles from "../commands/insertFiles";
+import insertAllFiles from "../commands/insertAllFiles";
 import baseDictionary from "../dictionary";
 
 const SSR = typeof window === "undefined";
@@ -181,6 +182,8 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     switch (item.name) {
       case "image":
         return this.triggerImagePick();
+      case "file":
+        return this.triggerFilePick();
       case "embed":
         return this.triggerLinkInput(item);
       case "link": {
@@ -258,6 +261,12 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     }
   };
 
+  triggerFilePick = () => {
+    if (this.inputFileRef.current) {
+      this.inputFileRef.current.click();
+    }
+  };
+
   triggerLinkInput = item => {
     this.setState({ insertItem: item });
   };
@@ -310,7 +319,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     this.clearSearch();
 
     if (parent) {
-      insertFiles(view, event, parent.pos, files, {
+      insertAllFiles(view, event, parent.pos, files, {
         uploadFile,
         onFileUploadStart,
         onFileUploadStop,
@@ -470,9 +479,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
 
-      if (!uploadFile && item.name === "file") {
-        return true;
-      }
+      if (!uploadFile && item.name === "file") return true;
 
       // some items (defaultHidden) are not visible until a search query exists
       if (!search) return !item.defaultHidden;
