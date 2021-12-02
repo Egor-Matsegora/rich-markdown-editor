@@ -51,6 +51,12 @@ const insertAllFiles = function(view, event, pos, files, options) {
     // happening in the background in parallel.
     uploadFile(file)
       .then(src => {
+        if (typeof src !== "string") {
+          console.warn(
+            "Wrong type of prop, transferred to uploadFile function! prop must be string type"
+          );
+          return;
+        }
         // otherwise, insert it at the placeholder's position, and remove
         // the placeholder itself
         const pos = findPlaceholder(view.state, id);
