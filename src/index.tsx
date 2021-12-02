@@ -46,6 +46,7 @@ import HardBreak from "./nodes/HardBreak";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
+import FileUpload from "./nodes/FileUpload";
 import ListItem from "./nodes/ListItem";
 import Notice from "./nodes/Notice";
 import OrderedList from "./nodes/OrderedList";
@@ -181,6 +182,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       // no default behavior
     },
     onImageUploadStop: () => {
+      // no default behavior
+    },
+    onFileUploadStart: () => {
+      // no default behavior
+    },
+    onFileUploadStop: () => {
       // no default behavior
     },
     onClickLink: href => {
@@ -349,6 +356,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             uploadImage: this.props.uploadImage,
             onImageUploadStart: this.props.onImageUploadStart,
             onImageUploadStop: this.props.onImageUploadStop,
+            onShowToast: this.props.onShowToast,
+          }),
+          new FileUpload({
+            dictionary,
+            uploadFile: this.props.uploadFile,
+            onFileUploadStart: this.props.onFileUploadStart,
+            onFileUploadStop: this.props.onFileUploadStop,
             onShowToast: this.props.onShowToast,
           }),
           new Table(),
@@ -808,9 +822,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
                   uploadImage={this.props.uploadImage}
+                  uploadFile={this.props.uploadFile}
                   onLinkToolbarOpen={this.handleOpenLinkMenu}
                   onImageUploadStart={this.props.onImageUploadStart}
                   onImageUploadStop={this.props.onImageUploadStop}
+                  onFileUploadStart={this.props.onFileUploadStart}
+                  onFileUploadStop={this.props.onFileUploadStop}
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />
