@@ -13,7 +13,8 @@
     "build": "tsc",
     "preversion": "yarn build",
     "watch": "yarn tsc-watch",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "dev": "webpack-serve --config example/webpack.config.js --port=4000"
   },
   "serve": {
     "open": true,
@@ -107,7 +108,10 @@
     "styled-components": "^5.2.1",
     "ts-loader": "^6.2.1",
     "tsc-watch": "^4.2.9",
-    "typescript": "4.1.6"
+    "typescript": "4.1.6",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-serve": "^3.2.0"
   },
   "resolutions": {
     "markdown-it": "^12.2.0",
